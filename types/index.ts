@@ -3,3 +3,10 @@ export type TwemojiProps = {
   size?: string
   className?: string
 }
+
+
+export type MySkill {
+  title: string, 
+  bgColor: string,
+  textColor: string
+}

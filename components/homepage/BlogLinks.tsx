@@ -9,10 +9,14 @@ export default function BlogLinks() {
         <Twemoji emoji="hammer-and-wrench" />
         <span className="umami--click--home-link-projects ml-1.5">What have I built?</span>
       </Link>
-      <Link href="/blog" className="hover:underline">
+      <Link href="/skills" className="hover:underline">
+        <Twemoji emoji="flexed-biceps" />
+        <span className="umami--click--home-link-blog ml-1.5">The skills that I have in my belt</span>
+      </Link>
+      {/* <Link href="/blog" className="hover:underline">
         <Twemoji emoji="memo" />
         <span className="umami--click--home-link-blog ml-1.5">My writings</span>
-      </Link>
+      </Link> */}
       {/* <Link href="/snippets" className="hover:underline">
         <Twemoji emoji="dna" />
         <span className="umami--click--home-link-snippets ml-1.5">My snippets collection</span>
@@ -21,10 +25,10 @@ export default function BlogLinks() {
         <Twemoji emoji="face-with-monocle" />
         <span className="umami--click--home-link-about ml-1.5">More about me and myself</span>
       </Link>
-      <Link href="/resume" className="hover:underline">
+      {/* <Link href="/resume" className="hover:underline">
         <Twemoji emoji="briefcase" />
         <span className="umami--click--home-link-resume ml-1.5">My career</span>
-      </Link>
+      </Link> */}
       {siteMetadata.analyticsURL && (
         <Link href={siteMetadata.analyticsURL} className="hover:underline">
           <Twemoji emoji="bar-chart" />

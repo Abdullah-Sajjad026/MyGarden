@@ -1,6 +1,6 @@
 import siteMetadata from '@/data/siteMetadata'
 import projectsData from '@/data/projectsData'
-import Card from '@/components/Card'
+import ProjectCard from '@/components/ProjectCard'
 import { PageSEO } from '@/components/SEO'
 
 export default function Projects() {
@@ -13,18 +13,20 @@ export default function Projects() {
             Projects
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Showcase your projects with a hero image (16 x 9)
+            My projects that I built with my colleagues at work and side projects
           </p>
         </div>
         <div className="container py-12">
           <div className="-m-4 flex flex-wrap">
-            {projectsData.map((d) => (
-              <Card
-                key={d.title}
-                title={d.title}
-                description={d.description}
-                imgSrc={d.imgSrc}
-                href={d.href}
+            {projectsData.map((p) => (
+              <ProjectCard
+                key={p.title}
+                title={p.title}
+                description={p.description}
+                imgSrc={p.imgSrc}
+                url={p.url}
+                builtWith={p.builtWith}
+                repo={p?.repo}
               />
             ))}
           </div>

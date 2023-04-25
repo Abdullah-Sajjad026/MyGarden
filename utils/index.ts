@@ -4,3 +4,18 @@ export function toKebabCase(str: string): string {
     ?.map((x) => x.toLowerCase())
     ?.join('-')
 }
+
+
+export async function fetcher(...args: unknown[]) {
+  // @ts-ignore
+  let res = await fetch(...args)
+  return res.json()
+}
+
+export function capitalize(str) {
+  if (typeof str !== 'string') {
+    return '';
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
