@@ -28,11 +28,35 @@ module.exports = {
         14: '3.5rem',
       },
       fontFamily: {
-        sans: ['Inter', ...fontFamily.sans],
+        sans: ['Outfit', ...fontFamily.sans],
       },
       colors: {
-        primary: colors.teal,
-        gray: colors.neutral,
+        primary: colors.indigo,
+        gray: colors.gray,
+        dark: '#22272e',
+        code: {
+          green: '#b5f4a5',
+          yellow: '#ffe484',
+          purple: '#d9a9ff',
+          red: '#ff8383',
+          blue: '#93ddfd',
+          white: '#fff',
+        },
+        spotify: '#1DB954',
+        twitter: '#1da1f2',
+        facebook: '#1877f2',
+      },
+      width: {
+        4.5: '1.125rem',
+        5.5: '1.375rem',
+      },
+      height: {
+        4.5: '1.125rem',
+        5.5: '1.375rem',
+      },
+      cursor: {
+        'zoom-in': 'zoom-in',
+        'zoom-out': 'zoom-out',
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -164,8 +188,25 @@ module.exports = {
             },
           },
         },
+        lg: {
+          'ol li::marker': {
+            content: 'none',
+          },
+          'ul li::marker': {
+            content: 'none',
+          },
+          ul: {
+            paddingLeft: '0px',
+          },
+          'ul > li': {
+            paddingLeft: '0px',
+          },
+        },
       }),
     },
+  },
+  variants: {
+    typography: ['dark'],
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }

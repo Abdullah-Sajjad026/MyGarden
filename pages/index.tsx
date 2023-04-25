@@ -1,11 +1,11 @@
 import Link from '@/components/Link'
 import { PageSEO } from '@/components/SEO'
 import Tag from '@/components/Tag'
+import { Greeting, Heading, TypedBios, ShortDescription, BlogLinks } from '@/components/homepage'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import { sortedBlogPost, allCoreContent } from 'pliny/utils/contentlayer'
 import { InferGetStaticPropsType } from 'next'
-import { NewsletterForm } from 'pliny/ui/NewsletterForm'
 import { allBlogs } from 'contentlayer/generated'
 import type { Blog } from 'contentlayer/generated'
 
@@ -22,8 +22,30 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+
+      <div className="mt-8 divide-y divide-gray-200 dark:divide-gray-700 md:mt-16">
+        <div className="space-y-2 md:my-4 md:space-y-5 md:pb-8 md:pt-6 xl:grid xl:grid-cols-4">
+          <div className="md:pr-8 xl:col-span-3">
+            <Greeting />
+            <div className="text-lg leading-8 text-gray-600 dark:text-gray-400">
+              <Heading />
+              <TypedBios />
+              <ShortDescription />
+              <BlogLinks />
+              {/*   <p className="my-8 flex">
+                <span className="mr-2">Happy reading</span>
+                <Twemoji emoji="clinking-beer-mugs" />
+              </p> */}
+            </div>
+          </div>
+          {/* <div className="hidden xl:block">
+            <ProfileCard />
+          </div> */}
+        </div>
+      </div>
+
+      {/* <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
             Latest
           </h1>
@@ -82,8 +104,8 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
             )
           })}
         </ul>
-      </div>
-      {posts.length > MAX_DISPLAY && (
+      </div> */}
+      {/* {posts.length > MAX_DISPLAY && (
         <div className="flex justify-end text-base font-medium leading-6">
           <Link
             href="/blog"
@@ -93,12 +115,12 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
             All Posts &rarr;
           </Link>
         </div>
-      )}
-      {siteMetadata.newsletter.provider && (
+      )} */}
+      {/* {siteMetadata.newsletter.provider && (
         <div className="flex items-center justify-center pt-4">
           <NewsletterForm />
         </div>
-      )}
+      )} */}
     </>
   )
 }
