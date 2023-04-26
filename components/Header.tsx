@@ -56,7 +56,7 @@ const Header = ({ onToggleNav }) => {
           </div>
           <ThemeSwitch />
           <button
-            className="sm:hidden ml-1 mr-1 h-8 w-8 rounded"
+            className="ml-1 mr-1 h-8 w-8 rounded sm:hidden"
             aria-label="Toggle Menu"
             onClick={onToggleNav}
           >

@@ -1,9 +1,9 @@
 import { PageSEO } from '@/components/SEO'
 import siteMetadata from '@/data/siteMetadata'
-import type {MySkill} from '@/types'
+import type { MySkill } from '@/types'
 
 export default function Skills() {
-  const skillsData : {frontend: MySkill[], backend: MySkill[], others: MySkill[]} = {
+  const skillsData: { frontend: MySkill[]; backend: MySkill[]; others: MySkill[] } = {
     frontend: [
       { title: 'React.js', bgColor: 'rgb(83, 193, 222)', textColor: 'white' },
       { title: 'Next.js', bgColor: 'rgb(0,0,0)', textColor: 'white' },
@@ -42,30 +42,28 @@ export default function Skills() {
             My Skills at a Glance
           </p>
         </div>
-        
+
         <SkillsSection title="Frontend Web Development" skills={skillsData.frontend} />
         <SkillsSection title="Backend Web Development" skills={skillsData.backend} />
         <SkillsSection title="More" skills={skillsData.others} />
-
       </div>
     </>
   )
 }
 
-
-function SkillsSection({title, skills}: {title: string, skills: MySkill[]}) {
-    return (
-<div className="container py-12">
-          <h3 className="mb-6 sm:mb-8 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
-           {title}
-          </h3>
-          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {skills.map((skill) => (
-              <SkillCard key={skill.title} {...skill} />
-            ))}
-          </div>
-        </div>
-    )
+function SkillsSection({ title, skills }: { title: string; skills: MySkill[] }) {
+  return (
+    <div className="container py-12">
+      <h3 className="mb-6 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:mb-8">
+        {title}
+      </h3>
+      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+        {skills.map((skill) => (
+          <SkillCard key={skill.title} {...skill} />
+        ))}
+      </div>
+    </div>
+  )
 }
 
 function SkillCard({ title, bgColor, textColor }: MySkill) {

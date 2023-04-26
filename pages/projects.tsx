@@ -26,7 +26,7 @@ export default function Projects() {
                 imgSrc={p.imgSrc}
                 url={p.url}
                 builtWith={p.builtWith}
-                repo={p?.repo}
+                repo={''}
               />
             ))}
           </div>

@@ -4,9 +4,8 @@ export type TwemojiProps = {
   className?: string
 }
 
-
-export type MySkill {
-  title: string, 
-  bgColor: string,
+export type MySkill = {
+  title: string
+  bgColor: string
   textColor: string
 }

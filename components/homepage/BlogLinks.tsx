@@ -11,7 +11,9 @@ export default function BlogLinks() {
       </Link>
       <Link href="/skills" className="hover:underline">
         <Twemoji emoji="flexed-biceps" />
-        <span className="umami--click--home-link-blog ml-1.5">The skills that I have in my belt</span>
+        <span className="umami--click--home-link-blog ml-1.5">
+          The skills that I have in my belt
+        </span>
       </Link>
       {/* <Link href="/blog" className="hover:underline">
         <Twemoji emoji="memo" />
