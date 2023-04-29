@@ -15,10 +15,10 @@ export default function BlogLinks() {
           The skills that I have in my belt
         </span>
       </Link>
-      {/* <Link href="/blog" className="hover:underline">
+      <Link href="/blog" className="hover:underline">
         <Twemoji emoji="memo" />
         <span className="umami--click--home-link-blog ml-1.5">My writings</span>
-      </Link> */}
+      </Link>
       {/* <Link href="/snippets" className="hover:underline">
         <Twemoji emoji="dna" />
         <span className="umami--click--home-link-snippets ml-1.5">My snippets collection</span>
