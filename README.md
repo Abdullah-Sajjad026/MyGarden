@@ -1,6 +1,6 @@
 # Abdullah's Online Garden 🌿
 
-Welcome to my online home, also known as my garden! Here, you'll find a showcase of my skills, projects, and experience as a Full-Stack MERN developer with 3+ years of experience. 🚀
+Welcome to my garden! Here, you'll find a showcase of my skills, projects, and experience as a Full-Stack MERN developer with 3+ years of experience. 🚀
 
 ## Motivation 💡
 
@@ -39,4 +39,4 @@ If you're interested in learning more about my work or have any questions, feel 
 
 This project is licensed under the terms of the MIT license. See the LICENSE file for more information.
 
-Copyright (c) [Your Name]
+Copyright (c) Abdullah Sajjad
