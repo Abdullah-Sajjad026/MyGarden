@@ -44,8 +44,16 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           <header className="pt-6 xl:pb-6">
             <div className="space-y-1 text-center">
               <dl className="space-y-10">
-                <div>
+                <div className="flex items-center justify-center gap-3">
                   <dt className="sr-only">Published on</dt>
+                  <Link
+                    href={`/${basePath}`}
+                    className="text-2xl transition-all hover:-translate-y-1 hover:shadow-lg"
+                    aria-label="Back to the blog"
+                  >
+                    ⬅️
+                  </Link>
+
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
                     <time dateTime={date}>
                       {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
@@ -77,14 +85,14 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       <dl className="whitespace-nowrap text-sm font-medium leading-5">
                         <dt className="sr-only">Name</dt>
                         <dd className="text-gray-900 dark:text-gray-100">{author.name}</dd>
-                        <dt className="sr-only">Twitter</dt>
+                        <dt className="sr-only">LinkedIn</dt>
                         <dd>
-                          {author.twitter && (
+                          {author.linkedin && (
                             <Link
-                              href={author.twitter}
+                              href={author.linkedin}
                               className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             >
-                              {author.twitter.replace('https://twitter.com/', '@')}
+                              {author.linkedin.replace('https://www.linkedin.com/in/', '@')}
                             </Link>
                           )}
                         </dd>
