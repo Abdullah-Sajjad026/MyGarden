@@ -21,7 +21,7 @@ const siteMetadata = {
   // youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com/in/abdullahsajjad026',
   locale: 'en-US',
-  analyticsURL: 'https://analytics.abdullahsajjad.me/',
+  analyticsURL: process.env.NEXT_APP_UMAMI_SHARE_URL,
   analytics: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
