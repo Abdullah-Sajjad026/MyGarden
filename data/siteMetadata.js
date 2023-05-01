@@ -15,7 +15,7 @@ const siteMetadata = {
   image: '/static/images/avatar3.jpg',
   socialBanner: '/static/images/social-banner.jpg',
   email: 'contact@abdullahsajjad.me',
-  github: 'https://github.com/Abdullah-Sajjad.me',
+  github: 'https://github.com/Abdullah-Sajjad026',
   twitter: 'https://twitter.com/Abdullah_webdev',
   // facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
