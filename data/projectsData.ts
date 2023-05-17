@@ -6,7 +6,7 @@ const projectsData = [
     assets, profiles, purchase/sell the products by writing
     enterprise-level React.js and Typescript code.`,
     imgSrc: '/static/images/projects/thetutor.png',
-    url: 'https://www.thetutor.com',
+    url: 'https://thetutor.me/',
     builtWith: [
       'react.js',
       'typescript',
