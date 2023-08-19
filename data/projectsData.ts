@@ -18,6 +18,21 @@ const projectsData = [
     ],
   },
   {
+    title: 'Doclytix',
+    description:
+      'An all-in AI-based Document Manager featuring Documents Classification, Keyword Tagging, Keyword Search, AI Generated Summaries, Semantic Search and Chatting with document capabilities. Easily sync your documents from Google Drive.',
+    imgSrc: '/static/images/projects/doclytix.png',
+    url: 'https://doclytix.dynalytix.ai/',
+    builtWith: [
+      'react.js',
+      'typescript',
+      'jotai',
+      'react-query',
+      '@tanstack/react-table',
+      'chakra ui',
+    ],
+  },
+  {
     title: 'Catalytic Prices',
     description: `Catalytic Price is a webapp that provides its users with the accurate prices for most catalytic converters.`,
     imgSrc: '/static/images/projects/catalytic-prices.png',

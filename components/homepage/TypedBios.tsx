@@ -10,9 +10,9 @@ export default function TypedBios() {
     typed.current = new Typed(el.current, {
       stringsElement: '#bios',
       typeSpeed: 40,
-      backSpeed: 10,
+      backSpeed: 20,
       loop: true,
-      backDelay: 1000,
+      backDelay: 2500,
     })
     return () => typed.current.destroy()
   }, [])
@@ -25,10 +25,13 @@ export default function TypedBios() {
           I live in <b className="font-medium">Rahim Yar Khan</b>.
         </li>
         <li>
+          They call me a <b className="font-medium">Young Programming Ninja</b>.
+        </li>
+        <li>
           My first programming language I learned was <b className="font-medium">BASIC</b>.
         </li>
-        <li>I love web development.</li>
-        <li>I'm focusing on getting better at MERN Stack development.</li>
+        <li>I make businesses shine on the web.</li>
+        <li>I'm focusing on improving my project architecture skills.</li>
         <li>I work mostly with JS/TS technologies.</li>
         <li>
           I'm somewhat a sport-guy. I love
@@ -38,10 +41,10 @@ export default function TypedBios() {
           .
         </li>
         <li>
-          I love playing chess <Twemoji emoji="chess-pawn" />.
+          I also like playing chess <Twemoji emoji="chess-pawn" />.
         </li>
         <li>
-          I love playing video game <Twemoji emoji="video-game" />, PUBG Mobile is my favorite one.
+          I am good at playing video games <Twemoji emoji="video-game" />, played PUBG a lot.
         </li>
       </ul>
       <span ref={el} className="text-neutral-900 dark:text-neutral-200" />

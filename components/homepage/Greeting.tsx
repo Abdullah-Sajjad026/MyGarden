@@ -17,6 +17,8 @@ export default function Greeting() {
       typeSpeed: 300,
       shuffle: true,
       loop: true,
+      backDelay: 2000,
+      backSpeed: 100,
       //  showCursor: false
     })
 
