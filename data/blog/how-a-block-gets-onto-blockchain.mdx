@@ -1,0 +1,51 @@
+---
+title: Addition block to blockchain, using the Proof-of-Work consensus mechanism
+date: 2023-06-20
+summary: This blog post explains the process of how a block gets onto the blockchain, using the Proof-of-Work consensus mechanism.
+tags: ['blockchain', 'technology', 'decentralization']
+draft: false
+---
+
+When a transaction occurs on a blockchain network, a new block is created to encapsulate that transaction. This block is then propagated to all nodes of the network. But how does it earn its spot in the blockchain?
+
+The decentralized nature of blockchain ensures its immutability and trustworthiness. To validate a block, nodes in a network undertake a crucial task: solving a complex mathematical puzzle. This puzzle is intentionally designed to be challenging but also energy intensive.
+
+## Block Creation
+
+When a new block is created, it is assigned a nonce, which is a random number. The nonce is used to generate the hash of the block, which is a unique string of characters that is generated from the data in the block.
+
+The miner who wants to add the block to the blockchain must find a nonce that, when hashed, produces a value that starts with a certain number of zeros. This is called Proof-of-Work (PoW).
+
+## Solving the Puzzle
+
+Solving the PoW puzzle is a computationally intensive process that requires a lot of computing power. Miners use specialized hardware, such as ASICs (application-specific integrated circuits), to solve the puzzle as quickly as possible.
+
+The first miner to find a solution to the puzzle broadcasts the solution to the network. The other nodes in the network then verify the solution to ensure that it is valid.
+
+![mining-machine](/static/images/blog/mining-machine.jpeg)
+
+## Mining
+
+The process of solving the PoW puzzle and adding a block to the blockchain is called mining. Miners are rewarded for their work with cryptocurrency. The amount of cryptocurrency rewarded to miners is typically halved every few years.
+
+## Solution Verification
+
+Once a miner has found a solution to the PoW puzzle, the other nodes in the network verify the solution to ensure that it is valid. The solution is verified by checking that the hash of the block starts with a certain number of zeros.
+
+If the solution is valid, the block is added to the blockchain of the verifying node and propagated to all other nodes' blockchains.
+
+## Reward
+
+The miner who finds the solution to the PoW puzzle is rewarded with cryptocurrency. The amount of cryptocurrency rewarded to miners is typically halved every few years.
+
+The reward for mining is what incentivizes miners to participate in the blockchain network. Miners are essentially paid to secure the network and add new blocks to the blockchain.
+
+## Proof-of-Work
+
+Proof-of-Work (PoW) is the most common consensus mechanism used by blockchain networks. It is a secure way to validate blocks and add them to the blockchain. However, it is also energy intensive.
+
+There are other consensus mechanisms that are less energy intensive, such as Proof-of-Stake (PoS). However, PoS is not as secure as PoW.
+
+## Conclusion
+
+The process of adding a block to the blockchain is a complex one. However, it is essential for the security and immutability of the blockchain. Proof-of-Work is the most common consensus mechanism used to validate blocks and add them to the blockchain. However, there are other alternatives that may be more suitable for certain applications.
