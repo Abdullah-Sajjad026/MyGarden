@@ -1,8 +1,8 @@
 const headerNavLinks = [
-  { href: '/skills', title: 'Skills' },
+  { href: '/technologies', title: 'Technologies' },
   { href: '/blog', title: 'Blog' },
   // { href: '/tags', title: 'Tags' },
-  { href: '/projects', title: 'Projects' },
+  { href: '/works', title: 'Works' },
   { href: '/about', title: 'About' },
 ]
 

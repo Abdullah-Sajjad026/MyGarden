@@ -11,7 +11,7 @@ const Header = ({ onToggleNav }) => {
 
   return (
     <header className="supports-backdrop-blur:bg-white/95 sticky top-0 z-30 bg-white/75 py-3 backdrop-blur dark:bg-dark/75">
-      <div className="mx-auto flex max-w-3xl items-center justify-between px-3 xl:max-w-5xl xl:px-0">
+      <div className="mx-auto flex max-w-4xl items-center justify-between px-3 xl:max-w-5xl xl:px-0">
         <div>
           <Link href="/" aria-label={siteMetadata.headerTitle}>
             <div className="flex items-center justify-between">

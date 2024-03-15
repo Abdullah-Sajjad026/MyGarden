@@ -7,6 +7,7 @@ export default function Skills() {
     frontend: [
       { title: 'React.js', bgColor: 'rgb(83, 193, 222)', textColor: 'white' },
       { title: 'Next.js', bgColor: 'rgb(0,0,0)', textColor: 'white' },
+      { title: 'React Native', bgColor: 'rgb(83, 193, 222)', textColor: 'white' },
       { title: 'Typescript', bgColor: 'rgb(25, 118, 210)', textColor: 'white' },
       { title: 'Javascript', bgColor: 'rgb(240, 219, 79)', textColor: 'black' },
       { title: 'Redux.js', bgColor: 'rgb(114, 72, 182)', textColor: 'white' },
@@ -22,6 +23,12 @@ export default function Skills() {
       { title: 'Express.js', bgColor: 'rgb(0, 0, 0)', textColor: 'white' },
       { title: 'MongoDB', bgColor: 'rgb(0, 241, 101)', textColor: 'rgb(0, 24, 41)' },
       { title: 'Prisma ORM', bgColor: 'rgb(12, 50, 73)', textColor: 'white' },
+      { title: 'Nest.js', bgColor: 'rgb(255, 255, 255)', textColor: 'rgb(0, 0, 0)' },
+      // dotnet stack. c#, asp.net core, ef core, sql server
+      { title: 'ASP.NET Core', bgColor: 'rgb(81,43,212)', textColor: 'white' },
+      { title: 'C#', bgColor: 'rgb(31	0	84	)', textColor: 'white' },
+      { title: 'EF Core', bgColor: 'rgb(55	190	236	)', textColor: 'rgb(white)' },
+      { title: 'SQL Server', bgColor: 'rgb(0	0	0	)	', textColor: 'rgb(184,	190,	190	)' },
     ],
     others: [
       { title: 'Strapi', bgColor: 'rgb(73, 69, 255)', textColor: 'white' },
@@ -36,10 +43,10 @@ export default function Skills() {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
-            Skills
+            Technologies
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            My Skills at a Glance
+            These are the technologies I have worked with and I am comfortable with.
           </p>
         </div>
 

@@ -1,0 +1,207 @@
+---
+title: Middlewares in ASP.NET Core
+date: 2024-01-22
+summary: This post provides a guide on middlewares in ASP.NET Core. It explains that middlewares are components assembled in the app pipeline to handle the request and response cycle. The post covers different ways to configure request delegates, such as using "Run", "Use", and "Map" methods. It also discusses short-circuiting the request pipeline and provides information on ASP.NET Core built-in middlewares.
+tags: ['Tech', '.NET']
+draft: false
+---
+
+# Middlewares in ASP.NET Core
+
+The content and topic covered in this guide are heavily inspired from:
+
+[ASP.NET Core Middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0)
+
+_I attempted to restructure and present the topic with my understanding and insights in a more simplified manner._
+
+---
+
+## Let’s Explore Middlewares in ASP.NET Core
+
+![https://illustrations.popsy.co/amber/man-on-a-bicycle.svg](https://illustrations.popsy.co/amber/man-on-a-bicycle.svg)
+
+**Middleware are components assembled in to app pipeline to handle request and response cycle. These are chained into the pipeline one after another so each middleware gets to choose whether to pass the request to next delegate in the pipeline and to perform work before and after the next middleware.**
+
+## Request Delegate
+
+Each single component acting as a middleware in the app pipeline.
+
+```csharp
+// An inline anonymous request delegate (middleware)
+app.Run(async context => context.Response.WriteAsync("App Running"));
+```
+
+![https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/index/_static/request-delegate-pipeline.png?view=aspnetcore-8.0](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/index/_static/request-delegate-pipeline.png?view=aspnetcore-8.0)
+
+## Ways to configure request delegates
+
+We can configure middlewares in three different ways on the IApplicationBuilder class using:
+
+- Run
+
+  These are known as terminal middlewares as these are the last ones in the pipeline and they don’t receive the `next` parameter so they cannot call the next middleware in the chain. These are mostly used at the end of chain.
+
+  ```csharp
+  var builder = WebApplication.CreateBuilder(args);
+  var app = builder.Build();
+
+  app.Run(async context =>
+  {
+      await context.Response.WriteAsync("Hello world!");
+  });
+
+  app.Run();
+  ```
+
+- Use
+
+  We chain multiple request delegates using the `use` middleware configuration method. It receives the `context` and `next` parameter. The next parameter represents the next delegate in the pipeline and we can **_short circuit_** the pipeline by not calling the next method.
+
+  ```csharp
+  var builder = WebApplication.CreateBuilder(args);
+  var app = builder.Build();
+
+  app.Use(async (context, next) =>
+  {
+      // Do work that can write to the Response.
+      await next.Invoke();
+      // Do logging or other work that doesn't write to the Response.
+  });
+
+  app.Run(async context =>
+  {
+      await context.Response.WriteAsync("Hello from 2nd delegate.");
+  });
+
+  app.Run();
+  ```
+
+- Map
+
+  [Map](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.mapextensions.map) extensions are used as a convention for branching the pipeline. `Map` branches the request pipeline based on matches of the given request path. If the request path starts with the given path, the branch is executed.
+
+  ```csharp
+  var builder = WebApplication.CreateBuilder(args);
+  var app = builder.Build();
+
+  // Will branch the pipeline
+  app.Map("/map1", HandleMapTest1);
+
+  // Will also branch the pipeline
+  app.Map("/map2", HandleMapTest2);
+
+  app.Run(async context =>
+  {
+      await context.Response.WriteAsync("Hello from non-Map delegate.");
+  });
+
+  app.Run();
+
+  static void HandleMapTest1(IApplicationBuilder app)
+  {
+      app.Run(async context =>
+      {
+          await context.Response.WriteAsync("Map Test 1");
+      });
+  }
+
+  static void HandleMapTest2(IApplicationBuilder app)
+  {
+      app.Run(async context =>
+      {
+          await context.Response.WriteAsync("Map Test 2");
+      });
+  }
+  ```
+
+_So far we have seen that_, Request delegates are configured through extension methods like **`Run`**, **`Map`**, and **`Use`**. An individual request delegate can be either in-line as an anonymous method (referred to as in-line middleware) or defined within a reusable class. These classes and in-line anonymous methods are collectively termed middleware or middleware components.
+
+Each middleware component in the request pipeline has a specific role. It is responsible for either invoking the next component in the pipeline or short-circuiting the pipeline. Short-circuiting, in this context, means a middleware component interrupts the normal flow, preventing further middleware from processing the request. When a middleware component short-circuits the pipeline, it's referred to as a terminal middleware because it acts as a terminal point, stopping the sequential execution of subsequent middleware components.
+
+## **Short-circuiting the request pipeline**
+
+When a delegate doesn't pass a request to the next delegate, it's called *short-circuiting the request pipeline*. Middleware added to the pipeline before the middleware that terminates further processing still processes code after their `next.Invoke` statements.
+
+**Why we short circuit the request pipeline?**
+
+Short-circuiting is often desirable because it avoids unnecessary work. For example, [Static File Middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-8.0) can act as a *terminal middleware* by processing a request for a static file and short-circuiting the rest of the pipeline.
+
+<>
+🚧 **Caution**
+Don't call `next.Invoke` after the response has been sent to the client. Changes to **[HttpResponse](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httpresponse)** after the response has started throw an exception. For example, **[setting headers and a status code throw an exception](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/best-practices?view=aspnetcore-8.0#do-not-modify-the-status-code-or-headers-after-the-response-body-has-started)**. Writing to the response body after calling `next`:
+
+- May cause a protocol violation. For example, writing more than the stated `Content-Length`.
+- May corrupt the body format. For example, writing an HTML footer to a CSS file.
+
+**[HasStarted](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httpresponse.hasstarted)** is a useful hint to indicate if headers have been sent or the body has been written to.
+
+</>
+
+## ASP.NET Core Built-in Middlewares:
+
+The [Microsoft.AspNetCore.Builder](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder) namespace exposes many built in middlewares on the [WebApplicationBuilder](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.webapplicationbuilder) interface.
+
+For example:
+
+```csharp
+if (env.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseDatabaseErrorPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseCookiePolicy();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseSession();
+app.MapRazorPages();
+```
+
+The above code adds middleware components for common app scenarios:
+
+1. Exception/error handling
+   - When the app runs in the Development environment:
+     - Developer Exception Page Middleware ([UseDeveloperExceptionPage](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.developerexceptionpageextensions.usedeveloperexceptionpage)) reports app runtime errors.
+     - Database Error Page Middleware ([UseDatabaseErrorPage](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.databaseerrorpageextensions.usedatabaseerrorpage)) reports database runtime errors.
+   - When the app runs in the Production environment:
+     - Exception Handler Middleware ([UseExceptionHandler](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.exceptionhandlerextensions.useexceptionhandler)) catches exceptions thrown in the following middlewares.
+     - HTTP Strict Transport Security Protocol (HSTS) Middleware ([UseHsts](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.hstsbuilderextensions.usehsts)) adds the `Strict-Transport-Security` header.
+2. HTTPS Redirection Middleware ([UseHttpsRedirection](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.httpspolicybuilderextensions.usehttpsredirection)) redirects HTTP requests to HTTPS.
+3. Static File Middleware ([UseStaticFiles](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.staticfileextensions.usestaticfiles)) returns static files and short-circuits further request processing.
+4. Cookie Policy Middleware ([UseCookiePolicy](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.cookiepolicyappbuilderextensions.usecookiepolicy)) conforms the app to the EU General Data Protection Regulation (GDPR) regulations.
+5. Routing Middleware ([UseRouting](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.endpointroutingapplicationbuilderextensions.userouting)) to route requests.
+6. Authentication Middleware ([UseAuthentication](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.authappbuilderextensions.useauthentication)) attempts to authenticate the user before they're allowed access to secure resources.
+7. Authorization Middleware ([UseAuthorization](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.authorizationappbuilderextensions.useauthorization)) authorizes a user to access secure resources.
+8. Session Middleware ([UseSession](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.sessionmiddlewareextensions.usesession)) establishes and maintains session state. If the app uses session state, call Session Middleware after Cookie Policy Middleware and before MVC Middleware.
+9. Endpoint Routing Middleware ([UseEndpoints](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.endpointroutingapplicationbuilderextensions.useendpoints) with [MapRazorPages](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.razorpagesendpointroutebuilderextensions.maprazorpages)) to add Razor Pages endpoints to the request pipeline.
+
+## Order of middlewares execution:
+
+The following diagram provided my Microsoft shows the complete request processing pipeline for [ASP.NET](ASP.NET) Core MVC and Razor Pages apps. You can see how, in a typical app, existing middlewares are ordered and where custom middlewares are added. You have full control over how to reorder existing middlewares or inject new custom middlewares as necessary for your scenarios.
+
+You can read more about middlewares order and how to properly order them at
+
+[ASP.NET Core Middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0)
+
+![https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/index/_static/middleware-pipeline.svg?view=aspnetcore-8.0](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/index/_static/middleware-pipeline.svg?view=aspnetcore-8.0)
+
+## Writing custom middlewares:
+
+We can write our own custom middlewares easily using the interfaces provided by [ASP.NET](http://ASP.NET) Core and then registering them in the WebApplicationBuilder. Explore about writing custom middlewares in details here:
+
+[Write custom ASP.NET Core middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write?view=aspnetcore-8.0)
+
+I hope that you were able to understand the concept of middlewares in ASP.NET Core to some extent. Thanks for reading.
+
+## Awesome References:
+
+[https://youtu.be/5eifH7LEnGo?si=ibICMpmd1GuYyjgC](https://youtu.be/5eifH7LEnGo?si=ibICMpmd1GuYyjgC)
+
+[ASP.NET Core Middleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0)
