@@ -1,0 +1,59 @@
+---
+title: "Leading the multi-market Archer 2.0 rewrite on a two-person frontend team"
+summary: "Reused a documented architecture instead of starting over — one composition pattern, AI agents pointed at written conventions, every change reviewed — so the codebase stayed consistent through the rebuild."
+company: "Archer Affiliates"
+role: "Lead Frontend Engineer"
+year: "2024–Present"
+stack: ["Next.js", "React", "React Query", "React Hook Form", "Zod", "MUI", "Tailwind"]
+featured: true
+order: 3
+---
+
+## Where it started
+
+When Archer expanded past the US into more marketplaces, the frontend needed rebuilding for the new markets, and it needed to happen quickly. I'd recently moved into the lead frontend role — the senior engineer I'd worked under had left — so the architecture and the timeline were mine to handle, on a two-person frontend team.
+
+## Reusing what already worked
+
+Rebuilding from scratch would have cost time we didn't have. I'd built the original frontend with conventions I documented as I went — a consistent module structure, one composition pattern for data-driven pages, and the rules written down. So instead of starting over, I reused the design system and that structure: cloned the setup, removed the old modules, and rebuilt the feature surface for the new markets on the same foundation.
+
+For the new modules I used AI coding agents to do a lot of the writing, and reviewed every change before it merged. That worked because the conventions were already written down, so the agents had a clear pattern to follow, and because the review caught anything that drifted from it. An agent in a messy codebase just produces mess faster; against a documented structure it stays consistent. The useful part wasn't the agents — it was having an architecture worth pointing them at, and reading their output carefully.
+
+## The structure underneath
+
+The frontend is organized by domain — `modules/<domain>/{apis, components, contexts, hooks, hocs, utils, config}` — and every data-driven page is built from the same composition:
+
+```js
+withUser(              // auth guard + user-type gate
+  withFilters(         // URL-backed filter state
+    withProducts(Page) // data fetch + pagination + selection
+  )
+)
+```
+
+A few choices behind it:
+
+- **Higher-order components instead of one big per-page hook.** Each concern — auth, filters, data, selection — is its own layer a page opts into. It's a bit more wrapping, but new modules reuse the same parts instead of re-implementing them, and the pattern is simple enough for a junior engineer or an agent to follow.
+- **JSDoc with `// @ts-check` instead of TypeScript.** It gives most of the type safety without adding a compile step or migrating the existing JS. The trade-off is weaker inference, which I noted as a known gap rather than pretending it was free.
+- **React Query for server state, Context for UI state, no Redux.**
+- **Conventions kept in docs** (`CLAUDE.md`, per-module `*.docs.md`) so a new teammate — or an agent — can extend a module without me walking them through it.
+
+## What got built on it
+
+The same structure carried the new feature surface: the reporting and analytics suite, affiliate product discovery, self-serve onboarding (Amazon OAuth, Stripe, OTP email verification), the admin catalog, users and billing, and the bulk-action tooling.
+
+The reporting module shipped as four per-report table components, performance charts, an inline-filter bar plus a drawer for more filters, server-side sorting and pagination, CSV export on each tab, and expandable rows for drill-down — over live data across several country marketplaces and currencies. Rather than one configurable table I kept separate components per report, since a shared abstraction full of conditionals is harder to work with than some duplication. Currency had been hardcoded to USD, so I built a country-to-brand-to-currency setup: a grouped brand picker that locks to one country at a time, and a country-currency map that drives formatting in every cell, tooltip, and chart.
+
+On the admin side — catalog, commissions, users, and billing — safe bulk operations were the common thread. Each bulk action runs a dry-run first that shows which filters are applied and what will change, and nothing commits until the admin confirms; on a tool that can change thousands of rows at once, the extra round trip is worth it. Selection is keyed on product-and-country, not product alone, so a bulk action can't change the wrong market's rows. CSV import shows per-row success or failure back to the admin, and export streams from the backend respecting the active filters.
+
+For customers, brands got the international marketplaces layout and an embedded BI experience that renders each brand's own Looker dashboard behind a profile selector — a per-profile embed URL rather than one global dashboard, so the BI data stays scoped to the right brand. Affiliates got a product-discovery module with a searchable, filterable grid, optimistic favorites with rollback on failure, per-product attribution links, and a link-performance dialog backed by a time-series API. It's the same filter and table code as the admin side, so behavior stays consistent across both audiences.
+
+## A couple of things that tested it
+
+A production SSR outage: pages started 500-ing in production from an ESM/CJS module-resolution issue on AWS Amplify, where a charting dependency was being pulled into server-rendered pages through a barrel re-export. The fix had two parts — a server-only webpack alias forcing that package to its CommonJS entry on the server, and trimming the barrel so chart components stopped leaking into every consumer — then I made `next/dynamic({ ssr: false })` for charts a documented rule so it wouldn't come back. Because the codebase was consistent, the fix was one rule rather than a scatter of patches.
+
+A filter-state collision: two filtered tables on one page collided on their URL keys. Rather than let the second table fall back to local state and break the pattern, I added optional key-prefixing to the shared filter hook so both tables stayed URL-backed.
+
+## How it turned out
+
+The rewrite launched across the new markets on the timeline, with a two-person frontend team. The new modules all followed one documented structure and went through review, so the codebase stayed consistent through the rebuild rather than fragmenting — which was the point of reusing the foundation instead of starting over.

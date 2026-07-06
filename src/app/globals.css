@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens — "Spec sheet" identity
+   Paper #F7F7F4 · Ink #17181C · Ultramarine #2727E6 · Metadata gray #6E7178
+   Display: Bricolage Grotesque · Body: Instrument Sans · Labels: IBM Plex Mono
+--------------------------------------------------------------------------- */
+
+:root {
+  --paper: #f7f7f4;
+  --ink: #17181c;
+  --ultramarine: #2727e6;
+  --meta: #6e7178;
+
+  /* shadcn semantic variables mapped to the palette */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #fdfdfb;
+  --card-foreground: var(--ink);
+  --popover: #fdfdfb;
+  --popover-foreground: var(--ink);
+  --primary: var(--ultramarine);
+  --primary-foreground: var(--paper);
+  --secondary: #ecece7;
+  --secondary-foreground: var(--ink);
+  --muted: #ecece7;
+  --muted-foreground: var(--meta);
+  --accent: #ecece7;
+  --accent-foreground: var(--ink);
+  --destructive: #c62b2b;
+  --destructive-foreground: var(--paper);
+  --border: #dededa;
+  --input: #dededa;
+  --ring: var(--ultramarine);
+  --radius: 0.25rem;
+
+  /* Text-level accent — ultramarine in light; a lighter blue in dark (see .dark)
+     because #2727E6 fails contrast as text on the dark background. */
+  --accent-text: var(--ultramarine);
+}
+
+/* Dark theme — overrides CSS variables ONLY. Components keep their semantic
+   classes; fills (--primary, --ring, --primary-foreground) stay ultramarine/paper
+   so the WorkCard invert and buttons are unchanged. */
+.dark {
+  --background: #131417;
+  --foreground: #ededea;
+  --card: #191a1f;
+  --card-foreground: #ededea;
+  --popover: #191a1f;
+  --popover-foreground: #ededea;
+  --secondary: #1f2026;
+  --secondary-foreground: #ededea;
+  --muted: #1f2026;
+  --muted-foreground: #9a9da6;
+  --accent: #1f2026;
+  --accent-foreground: #ededea;
+  --border: #2a2b31;
+  --input: #2a2b31;
+  --accent-text: #7b7bff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ultramarine: var(--ultramarine);
+  --color-accent-text: var(--accent-text);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01";
+  }
+  ::selection {
+    background: var(--ultramarine);
+    color: var(--paper);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Route-change cross-fade (React <ViewTransition default="page-fade">).
+     Subtle only — one bold moment belongs to WorkCard, not to navigation. */
+  ::view-transition-old(.page-fade),
+  ::view-transition-new(.page-fade) {
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+  }
+  /* The `*` reset above never reaches the view-transition pseudo-tree — kill it here. */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(.page-fade),
+    ::view-transition-new(.page-fade) {
+      animation: none !important;
+    }
+  }
+}
+
+@layer components {
+  /* Mono eyebrow label — the recurring "spec" motif */
+  .spec-label {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground;
+  }
+
+  /* Long-form prose for MDX case studies and posts */
+  .prose-spec {
+    @apply text-[1.0325rem] leading-[1.75] text-foreground/90;
+  }
+  .prose-spec h2 {
+    @apply font-display text-2xl font-semibold tracking-tight mt-12 mb-4 text-foreground;
+  }
+  .prose-spec h3 {
+    @apply font-display text-xl font-semibold tracking-tight mt-9 mb-3 text-foreground;
+  }
+  .prose-spec p {
+    @apply my-5;
+  }
+  .prose-spec ul {
+    @apply my-5 list-disc pl-6 space-y-2;
+  }
+  .prose-spec ol {
+    @apply my-5 list-decimal pl-6 space-y-2;
+  }
+  .prose-spec li::marker {
+    color: var(--accent-text);
+  }
+  /* Spec-sheet table — thin ruled rows, mono header */
+  .prose-spec table {
+    @apply my-6 w-full border-collapse text-[0.9375rem] leading-relaxed;
+  }
+  .prose-spec th {
+    @apply border-b border-border py-2.5 pr-4 text-left align-top font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground;
+  }
+  .prose-spec td {
+    @apply border-b border-border py-2.5 pr-4 align-top;
+  }
+  .prose-spec th:last-child,
+  .prose-spec td:last-child {
+    @apply pr-0;
+  }
+  .prose-spec strong {
+    @apply font-semibold text-foreground;
+  }
+  .prose-spec a {
+    @apply text-accent-text underline underline-offset-4 decoration-accent-text/40 hover:decoration-accent-text;
+  }
+  .prose-spec code {
+    @apply font-mono text-[0.875em] bg-muted px-1.5 py-0.5 rounded-sm;
+  }
+  .prose-spec pre {
+    @apply font-mono text-sm bg-[#101114] text-[#e8e8e4] rounded-md p-4 my-6 overflow-x-auto dark:border dark:border-border;
+  }
+  .prose-spec pre code {
+    @apply bg-transparent p-0;
+  }
+  .prose-spec blockquote {
+    @apply border-l-2 border-accent-text pl-4 my-6 text-muted-foreground;
+  }
+  .prose-spec hr {
+    @apply my-10 border-border;
+  }
+}

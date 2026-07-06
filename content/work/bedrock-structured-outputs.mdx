@@ -1,0 +1,33 @@
+---
+title: "Typed, schema-validated AI outputs across ~20 Bedrock generation flows"
+summary: "One Zod schema, used twice — constraining the model's decoding and validating the response — replaced best-effort JSON parsing across every AI feature."
+company: "Lyssin"
+role: "Founding Engineer"
+year: "2025–2026"
+stack: ["TypeScript", "Zod", "JSON Schema", "Amazon Bedrock", "AWS Lambda", "Jest"]
+featured: true
+order: 2
+---
+
+## The problem
+
+The product has around twenty AI features running on Amazon Bedrock — drafting reachouts, summarising feedback, scoring sentiment and importance, refining themes. Each one prompted the model for JSON and parsed whatever came back. That breaks in predictable ways: the model adds a line of preamble, returns a key as one word instead of two, gives a number out of range, or produces JSON with a bad escape character. These failed quietly — a job would mark a record as errored, or a request would 500 with an unhelpful message.
+
+Tightening prompts doesn't really fix it, since model output is probabilistic. So I built a single function the AI features call — `invokeStructured<T>(schema, options)` — that takes a Zod schema and returns a typed, validated result or a clear typed error.
+
+## How it works
+
+The Zod schema compiles to JSON Schema, a sanitizer reconciles it to the subset Bedrock supports, the call constrains decoding to that schema so the model can't emit JSON that violates it, and the response is checked again with Zod after parsing. A validation miss gets one retry; a refusal or a truncation returns a distinct error.
+
+## The decisions
+
+- **Constrain the decoding rather than parse-and-repair.** Constraining the decode means the JSON is valid against the schema to begin with, so the old parsing-and-repair code isn't needed on this path.
+- **One Zod schema used twice.** The same schema compiles to the JSON Schema that constrains decoding and runs as the check after parsing, and it gives a typed result — one definition instead of two that can drift apart.
+- **Strip some schema keywords, throw on others.** Bedrock rejects unsupported keywords before it runs, so the schema has to be trimmed to what it supports. I strip the decorative ones (`minLength`, `pattern`) quietly because Zod re-checks them after parsing, but throw on the ones that change meaning (`oneOf`, `not`, `if/then/else`) — rewriting those silently would change which outputs the schema accepts.
+- **Don't retry refusals.** A deliberate refusal short-circuits the retry, since retrying just spends another call on the same answer.
+- **A flag that relaxes the guarantee without breaking callers.** With it off, calls fall back to the old parse path but still run the Zod check, so turning it off loosens the guarantee rather than breaking anything — which made it safe to roll out across the existing features.
+- **Pre-compile the grammars at deploy.** Bedrock compiles each schema to a grammar on first use and caches it for about a day, so the first request after a deploy paid that cost. A small deploy-time function warms every schema, and the deploy fails if one can't warm up.
+
+## How it turned out
+
+The AI features return typed, checked output instead of best-effort-parsed JSON; the malformed-output failures went away on this path; and refusals and truncation now come back as clear errors instead of generic 500s.

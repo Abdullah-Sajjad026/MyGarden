@@ -1,0 +1,41 @@
+---
+title: "Building the Blyndspot dashboard from MVP to v1 as the only frontend engineer"
+summary: "A shared foundation — typed routing, URL-driven filters, one generic data table — that let three product surfaces grow without the plumbing fragmenting."
+company: "Lyssin"
+role: "Founding Engineer"
+year: "2024–2026"
+stack: ["React", "TypeScript", "Next.js", "MUI", "React Query", "Zod"]
+featured: true
+order: 1
+---
+
+## Where it started
+
+When I joined, the dashboard was an early MVP and I was the only frontend engineer on it. It had to reach v1 across three product surfaces — Blyndspot, MyVoyce, and Ansir — each with its own users and flows. The starting point was typical for an MVP: routes were string literals spread across the code, there was no consistent layout, the UI was desktop-only, and every list view did its own filtering, sorting, and pagination.
+
+Building twenty screens on that would have meant twenty slightly different versions of the same plumbing, so I started with the shared pieces instead.
+
+## The shared foundation
+
+I built four things first, and every feature was built on them:
+
+- **Centralised routing and a shared layout.** Each feature module exports a route factory that takes a base path and returns typed routes, and every dynamic URL comes from a `getPath(id)` builder rather than a hand-written string. One root layout and a hook that builds the nav from the route tree gave the whole app a consistent shell.
+- **Filter state kept in the URL.** Every list needs filtering, sorting, search, and pagination that survives a refresh and can be shared as a link. I wrote a hook that keeps filter state in the URL query string. Each filter declares its key and default; domain hooks compose several into one object. It uses `history.replace` so filtering doesn't fill the back button, and resets pagination when a filter changes.
+- **A generic data table and pagination.** One `DataTable<T>` taking typed column definitions with custom cell renderers, row selection, sorting, and a flag to switch between server-side and client-side pagination — built on the URL-state hook, so page and page size are URL params too. One table serves every entity.
+- **A data-fetching convention.** One file per endpoint holding its types, the request function, an exported query key, and the React Query hook, with loading and error states handled by a few higher-order components so the page components stay simple. Every module followed this.
+
+## What got built on it
+
+With that in place I built the product surfaces: the Insights explorer (browsing and filtering AI-surfaced feedback topics), Reachouts (a details view with metrics and a multi-step creation dialog), organization and user management (CRUD, CSV import/export, a three-level permissions matrix), the dashboard home (widgets reusing the same data and filter code as the full pages), and an interactive department-by-priority chart that also acts as a filter.
+
+## Where the foundation paid off
+
+Two things later made the upfront work worth it.
+
+When the dashboard was rebranded from Lyssin to Blyndspot, the change was mostly to centralized config — route definitions, one palette/token source, the icon set — rather than scattered strings, so it went through without breaking navigation. Because routes and labels were already in one place and URLs came from builders, it was a config edit rather than a hunt through the code.
+
+And making the dashboard responsive came down to one shared system — a fluid-typography token setup where each type style is a mobile-first cascade, and a set of named breakpoint hooks (`useIsMobile`, `useDeviceClass`) from one source — rather than ad-hoc media queries per component. Each page then adapted from mobile to large screens against the same system.
+
+## How it turned out
+
+I built the dashboard from MVP to v1 as the only frontend engineer, across three product surfaces, on a shared foundation that the features plugged into — so the product could grow without the plumbing fragmenting. The rebrand went through without navigation regressions, and the desktop-only app became responsive against one system.
