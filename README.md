@@ -40,10 +40,3 @@ Paper `#F7F7F4` · Ink `#17181C` · Ultramarine `#2727E6` accent · Bricolage Gr
 
 Push to GitHub → import on Vercel. No env vars required.
 
-## TODO before going live
-
-- [ ] Confirm email + social handles in `src/data/site.ts`
-- [ ] Fill ⚑ items on `/uses`
-- [ ] Add 1–2 human lines + first gallery photos on `/about`
-- [ ] Port Archer case study into `content/work/`
-- [ ] `opengraph-image.tsx` per route (dynamic OG cards)
